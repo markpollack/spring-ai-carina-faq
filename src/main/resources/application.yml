@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  ai:
+    openai:
+      # for chatgpt openai the base-url is known.  For models that expose an api compatible with chatgpt openai, specify the base-url
+      #      base-url:
+      api-key: ${OPENAI_API_KEY}
+      temperature: 0.3
+      model: gpt-3.5-turbo
+
