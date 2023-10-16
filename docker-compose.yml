@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+    postgres:
+        image: ankane/pgvector:v0.5.0
+        restart: always
+        environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+        logging:
+          options:
+            max-size: 10m
+            max-file: "3"
+        ports:
+          - '5432:5432'
