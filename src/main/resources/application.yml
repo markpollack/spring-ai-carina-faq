@@ -1,13 +1,19 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/vector_store
     username: postgres
     password: postgres
   ai:
     openai:
       # for chatgpt openai the base-url is known.  For models that expose an api compatible with chatgpt openai, specify the base-url
       #      base-url:
-      api-key: ${OPENAI_API_KEY}
       temperature: 0.3
-      model: gpt-3.5-turbo
+      # api-key: ${OPENAI_API_KEY}
+      # model: gpt-3.5-turbo
+      base-url: https://vllm.libra.decc.vmware.com/api/v1/
+      api-key: ${VLLM_DECC_API_KEY}
+      model: meta-llama/Llama-2-13b-chat-hf
 
+      embedding-base-url: https://api.openai.com
+      embedding-api-key: ${OPENAI_API_KEY}
+      embedding-model: text-embedding-ada-002

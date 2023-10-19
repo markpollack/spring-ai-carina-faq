@@ -1,9 +1,19 @@
 package com.example.carina.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theokanning.openai.OpenAiHttpException;
+import com.theokanning.openai.client.OpenAiApi;
+import com.theokanning.openai.service.OpenAiService;
+import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import org.springframework.ai.autoconfigure.openai.OpenAiProperties;
 import org.springframework.ai.embedding.EmbeddingClient;
+import org.springframework.ai.openai.client.OpenAiClient;
 import org.springframework.ai.retriever.VectorStoreRetriever;
 import org.springframework.ai.vectorstore.PgVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -17,6 +27,7 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.backoff.BackOffContext;
 import org.springframework.retry.support.Args;
 
+import java.time.Duration;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -77,8 +88,37 @@ public class CarinaConfig {
 
     @Bean
     public VectorStoreRetriever vectorStoreRetriever(VectorStore vectorStore) {
-        return new VectorStoreRetriever(vectorStore, 5, 0.75);
+        return new VectorStoreRetriever(vectorStore, 4, 0.75);
     }
+
+    // vLLM API work-around
+	@Bean
+	public OpenAiClient openAiClient(OpenAiProperties openAiProperties) {
+		OpenAiClient openAiClient = new OpenAiClient(theoOpenAiService(openAiProperties.getBaseUrl(),
+				openAiProperties.getApiKey(), openAiProperties.getDuration()));
+		openAiClient.setTemperature(openAiProperties.getTemperature());
+		openAiClient.setModel(openAiProperties.getModel());
+		return openAiClient;
+	}
+
+	private OpenAiService theoOpenAiService(String baseUrl, String apiKey, Duration duration) {
+
+		ObjectMapper mapper = OpenAiService.defaultObjectMapper();
+		OkHttpClient client = OpenAiService.defaultClient(apiKey, duration);
+
+		// Waiting for https://github.com/TheoKanning/openai-java/issues/249 to be
+		// resolved.
+		Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
+			.client(client)
+			.addConverterFactory(JacksonConverterFactory.create(mapper))
+			.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+			.build();
+
+		OpenAiApi api = retrofit.create(VllmOpenAiApi.class);
+
+		return new OpenAiService(api);
+	}
+
 
 
 }

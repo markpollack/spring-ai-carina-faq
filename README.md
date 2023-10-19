@@ -45,13 +45,16 @@ Then you can connect to the database (password: `postgres`) and inspect or alter
 psql -U postgres -h localhost -p 5432
 
 \l
-\c postgres
+\c vector_store
 \dt
 
 select count(*) from vector_store;
 
 delete from vector_store;
 ```
+
+You can connect to the pgAdmin on http://localhost:5050  as user: `pgadmin4@pgadmin.org` and pass: `admin`.
+Then navigate to the `Databases/vector_store/Schemas/public/Tables/vector_store`.
 
 The UI tool [DBeaver](https://dbeaver.io/download/) is also a useful GUI for postgres.
 
@@ -67,7 +70,7 @@ The first thing you should do is load the data.  The examples show usage with th
 
 ### Loading, counting and deleting data
 
-```shell 
+```shell
 http POST http://localhost:8080/data/load
 ```
 
