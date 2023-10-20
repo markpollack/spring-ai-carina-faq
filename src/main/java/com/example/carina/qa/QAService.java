@@ -41,12 +41,7 @@ public class QAService {
     }
 
     public String generate(String message, boolean stuffit) {
-
-        logger.info("Retrieving relevant documents");
-        List<Document> similarDocuments = vectorStoreRetriever.retrieve(message);
-        logger.info(String.format("Found %s relevant documents.", similarDocuments.size()));
-
-        Message systemMessage = getSystemMessage(similarDocuments, stuffit);
+        Message systemMessage = getSystemMessage(message, stuffit);
         UserMessage userMessage = new UserMessage(message);
         Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
 
@@ -56,9 +51,12 @@ public class QAService {
         return aiResponse.getGeneration().getText();
     }
 
-    private Message getSystemMessage(List<Document> similarDocuments, boolean stuffit) {
-        String documents = similarDocuments.stream().map(entry -> entry.getContent()).collect(Collectors.joining("\n"));
+    private Message getSystemMessage(String message, boolean stuffit) {
         if (stuffit) {
+            logger.info("Retrieving relevant documents");
+            List<Document> similarDocuments = vectorStoreRetriever.retrieve(message);
+            logger.info(String.format("Found %s relevant documents.", similarDocuments.size()));
+            String documents = similarDocuments.stream().map(entry -> entry.getContent()).collect(Collectors.joining("\n"));
             SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(this.qaSystemPromptResource);
             return systemPromptTemplate.createMessage(Map.of("documents", documents));
         } else {

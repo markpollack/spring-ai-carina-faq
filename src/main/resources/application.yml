@@ -5,14 +5,13 @@ spring:
     password: postgres
   ai:
     openai:
-      # for chatgpt openai the base-url is known.  For models that expose an api compatible with chatgpt openai, specify the base-url
-      #      base-url:
       temperature: 0.3
-      # api-key: ${OPENAI_API_KEY}
-      # model: gpt-3.5-turbo
-      base-url: https://vllm.libra.decc.vmware.com/api/v1/
-      api-key: ${VLLM_DECC_API_KEY}
-      model: meta-llama/Llama-2-13b-chat-hf
+      # for chatgpt openai the base-url is known.  For models that expose an api compatible with chatgpt openai, specify the base-url
+#      base-url: https://vllm.libra.decc.vmware.com/api/v1/
+#      api-key: ${VLLM_DECC_API_KEY}
+#      model: meta-llama/Llama-2-13b-chat-hf
+      api-key: ${OPENAI_API_KEY}
+      model: gpt-3.5-turbo
 
       embedding-base-url: https://api.openai.com
       embedding-api-key: ${OPENAI_API_KEY}
