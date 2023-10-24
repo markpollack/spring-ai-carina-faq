@@ -1,0 +1,7 @@
+---
+applications:
+  - name: Merlin
+    path: target/spring-ai-carina-faq-0.0.1-SNAPSHOT.jar
+    buildpack: java_buildpack_offline
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+} }'

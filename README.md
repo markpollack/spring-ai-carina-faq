@@ -28,6 +28,17 @@ The `/resources/application.yml` references the environment variable `${OPENAI_A
 
 In short, Spring Boot provides many ways to set this property, pick a method that works for your needs.
 
+#### Direnv To Manage Environment Variables
+If you have the [direnv shell extension](https://direnv.net/) an easy way to manage your environment variable is to create a .envrc file from
+the example file.
+
+You can do this with `cp .envrc.example .envrc`.
+
+Then enter values for all variables in the `.envrc` (This file is in the .gitignore so it will not be checked in)
+
+This will automatically load the environment variables within the project directory. 
+Run `direnv allow` or `source .envrc` after modifying the .envrc file.
+
 ## VectorStore
 
 To run the PgVectorStore locally, using docker-compose.
@@ -62,6 +73,11 @@ The UI tool [DBeaver](https://dbeaver.io/download/) is also a useful GUI for pos
 
 ```
 ./mvnw spring-boot:run
+```
+Make sure you are using Java 17. You can check the version with `java --version`.
+If your version is not set to 17 make sure you have the JDK installed and then use the follow command
+```
+export JAVA_HOME=`/usr/libexec/java_home -v 17`
 ```
 
 ## Access the endpoints
