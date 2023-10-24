@@ -1,0 +1,3 @@
+# Application variables (create a copy of this file as .envrc and add keys)
+export OPENAI_API_KEY=<INSERT KEY HERE>
+export VLLM_DECC_API_KEY=<INSERT KEY HERE>

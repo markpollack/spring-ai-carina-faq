@@ -7,13 +7,19 @@ import com.theokanning.openai.service.OpenAiService;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
 import org.springframework.ai.autoconfigure.openai.OpenAiProperties;
 import org.springframework.ai.embedding.EmbeddingClient;
 import org.springframework.ai.openai.client.OpenAiClient;
 import org.springframework.ai.retriever.VectorStoreRetriever;
 import org.springframework.ai.vectorstore.PgVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,9 +29,6 @@ import org.springframework.retry.RetryListener;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.backoff.BackOffContext;
 import org.springframework.retry.support.Args;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.time.Duration;
 import java.util.stream.Collectors;
@@ -95,7 +98,7 @@ public class CarinaConfig {
 	@Bean
     @ConditionalOnProperty(
             value="spring.ai.openai.base-url",
-            havingValue = "https://vllm.libra.decc.vmware.com/api/v1/")
+            havingValue = "https://openai.apps.dhaka.cf-app.com/v1/")
 	public OpenAiClient openAiClient(OpenAiProperties openAiProperties) {
 		OpenAiClient openAiClient = new OpenAiClient(theoOpenAiService(openAiProperties.getBaseUrl(),
 				openAiProperties.getApiKey(), openAiProperties.getDuration()));
@@ -121,4 +124,24 @@ public class CarinaConfig {
 
 		return new OpenAiService(api);
 	}
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins(
+                        "http://localhost:3000",
+                        "https://localization.carina.org",
+                        "https://www.localization.carina.org",
+                        "https://dev.carina.org",
+                        "https://www.dev.carina.org",
+                        "https://preview.carina.org",
+                        "https://www.preview.carina.org",
+                        "https://carina.org",
+                        "https://www.carina.org"
+                );
+            }
+        };
+    }
 }
