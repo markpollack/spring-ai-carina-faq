@@ -48,7 +48,7 @@ public class QAService {
         logger.info("Asking AI model to reply to question.");
         AiResponse aiResponse = aiClient.generate(prompt);
         logger.info("AI responded.");
-        return aiResponse.getGeneration().getText();
+        return aiResponse.getGeneration().getContent();
     }
 
     private Message getSystemMessage(String message, boolean stuffit) {

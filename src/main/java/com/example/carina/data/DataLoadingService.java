@@ -2,9 +2,9 @@ package com.example.carina.data;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ai.reader.ExtractedTextFormatter;
 import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
 import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
-import org.springframework.ai.reader.pdf.layout.PageExtractedTextFormatter;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class DataLoadingService {
         PagePdfDocumentReader pdfReader = new PagePdfDocumentReader(
                 this.pdfResource,
                 PdfDocumentReaderConfig.builder()
-                        .withPageExtractedTextFormatter(PageExtractedTextFormatter.builder()
+                        .withPageExtractedTextFormatter(ExtractedTextFormatter.builder()
                                 .withNumberOfBottomTextLinesToDelete(3)
                                 .withNumberOfTopPagesToSkipBeforeDelete(1)
                                 // .withLeftAlignment(true)

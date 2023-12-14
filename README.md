@@ -74,11 +74,6 @@ The UI tool [DBeaver](https://dbeaver.io/download/) is also a useful GUI for pos
 ```
 ./mvnw spring-boot:run
 ```
-Make sure you are using Java 17. You can check the version with `java --version`.
-If your version is not set to 17 make sure you have the JDK installed and then use the follow command
-```
-export JAVA_HOME=`/usr/libexec/java_home -v 17`
-```
 
 ## Access the endpoints
 
